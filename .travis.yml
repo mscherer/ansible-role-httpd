@@ -10,9 +10,9 @@ script:
 # verify the syntax of the playbook
   - ansible-lint tasks/main.yml
 # verify any shell script
-  - set -e ; for i in files/*.sh; do bash -n $i ;done
+#  - set -e ; for i in files/*.sh; do bash -n $i ;done
 # verify python script with pyflakes and pep8
-  - set -e ; for i in files/*.py; do flake8 $i ;done
+# - set -e ; for i in files/*.py; do flake8 $i ;done
 # setup the environment to run ansible
   - "echo '---\n- hosts: 127.0.0.1\n  remote_user: root\n  roles:' > role.yml"
   - echo "  - ${TRAVIS_REPO_SLUG/*\//}" >> role.yml
