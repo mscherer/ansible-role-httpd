@@ -13,6 +13,7 @@
   - mod_filter.conf
   - remove_sslv3.conf
   - mod_status.conf
+  - various.conf
   notify: restart httpd
 
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
