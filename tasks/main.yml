@@ -31,7 +31,7 @@
   when: website_url is defined
 
 # needed for newer apache, who requires at least 1 file for include
-- copy: path=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content=""
+- copy: path=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content="# Placeholder"
   when: website_url is defined
 
 - file: path=/etc/httpd/conf.d/password_protection.conf state=absent
