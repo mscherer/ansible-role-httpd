@@ -34,9 +34,6 @@
 - copy: dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content="# Placeholder"
   when: website_url is defined
 
-- file: path=/etc/httpd/conf.d/password_protection.conf state=absent
-  notify: restart httpd
-
 - htpasswd: path=/etc/httpd/{{ website_url }}.htpasswd name={{ website_user }} password={{ website_password }} owner=root group=apache mode=0640
   when: website_user is defined
 
