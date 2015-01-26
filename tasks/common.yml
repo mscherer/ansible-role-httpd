@@ -1,0 +1,32 @@
+---
+- yum: name={{ item }} state=installed
+  with_items:
+  - python-passlib
+  - httpd
+  - mod_ssl
+
+- service: name=httpd state=started enabled=yes
+
+- copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=apache mode=0644
+  with_items:
+  - name_vhost.conf
+  - mod_filter.conf
+  - remove_sslv3.conf
+  - mod_status.conf
+  - various.conf
+  notify: restart httpd
+
+- shell: lokkit -s {{ item }}
+  with_items:
+  - http
+  - https
+  when: ansible_distribution_major_version == '6' and (ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat')
+
+- shell: firewall-cmd --permanent --add-port={{ item }}/tcp
+  with_items:
+  - http
+  - https
+  when: ansible_distribution == 'Fedora' or ansible_distribution_major_version == '7'
+
+- lineinfile: dest=/etc/logrotate.conf regexp="^rotate" line="rotate {{ log_retention_week }}" state=present
+  when: log_retention_week is defined
