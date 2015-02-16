@@ -4,14 +4,6 @@
 
 - set_fact: httpd_common=True
 
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
-  notify: restart httpd
-  when: document_root is defined
-
-- template: src=vhost_redirect.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
-  notify: restart httpd
-  when: redirect is defined
-
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
 
@@ -24,3 +16,13 @@
 
 - htpasswd: path=/etc/httpd/{{ website_url }}.htpasswd name={{ website_user }} password={{ website_password }} owner=root group=apache mode=0640
   when: website_user is defined
+
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
+  notify: restart httpd
+  when: document_root is defined
+
+- template: src=vhost_redirect.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
+  notify: restart httpd
+  when: redirect is defined
+
+
