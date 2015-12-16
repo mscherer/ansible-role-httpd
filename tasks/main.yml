@@ -21,6 +21,8 @@
 - include: password.yml
   when: website_user is defined
 
+- include: document_root.yml
+  when: document_root is defined
 
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
