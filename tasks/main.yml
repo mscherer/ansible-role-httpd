@@ -9,7 +9,7 @@
 - set_fact: httpd_common=True
 
 - set_fact: use_ssl=True
-  when: use_letsencrypt
+  when: use_letsencrypt or use_freeipa
 
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
