@@ -18,4 +18,6 @@
 
 - shell: letsencrypt --text --renew-by-default --email root+lets-{{ website_url }}@{{ ansible_domain }} --domains {{ website_url }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
+- file: state=link src=/etc/letsencrypt/live/{{ website_url }}/privkey.pem  dest=/etc/pki/tls/private/{{ website_url }}.key
+- file: state=link src=/etc/letsencrypt/live/{{ website_url }}/cert.pem     dest=/etc/pki/tls/certs/{{ website_url }}.crt
 
