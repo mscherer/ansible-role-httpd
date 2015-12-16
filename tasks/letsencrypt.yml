@@ -1,0 +1,21 @@
+- yum: name={{ item }} state=installed
+  with_items:
+  - letsencrypt
+
+- set_fact: letsencrypt_root=/var/www/letsencrypt/{{ website_url}}
+
+- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
+
+- file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
+
+- file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=_letsencrypt mode=750 group=apache
+
+- template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/letsencrypt.conf
+  when: website_url is defined
+  notify: verify config and restart httpd
+
+- meta: flush_handlers
+
+- shell: letsencrypt --text --renew-by-default --email root+lets-{{ website_url }}@{{ ansible_domain }} --domains {{ website_url }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
+
+
