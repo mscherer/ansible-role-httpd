@@ -26,10 +26,8 @@
 
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
-  when: document_root is defined
 
-- template: src=vhost_redirect.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
-  notify: verify config and restart httpd
+- include: redirect.yml
   when: redirect is defined
 
 - include: letsencrypt.yml
