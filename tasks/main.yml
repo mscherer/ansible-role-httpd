@@ -8,6 +8,9 @@
 
 - set_fact: httpd_common=True
 
+- set_fact: use_ssl=True
+  when: use_letsencrypt
+
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
 
@@ -24,6 +27,7 @@
 - include: document_root.yml
   when: document_root is defined
 
+- set_fact: port=80
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
 
@@ -35,3 +39,9 @@
 
 - include: redirect_to_https.yml
   when: ssl_redirect
+
+- set_fact: port=443
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}_ssl.conf owner=root group=apache mode=0644
+  notify: verify config and restart httpd
+  when: use_ssl
+
