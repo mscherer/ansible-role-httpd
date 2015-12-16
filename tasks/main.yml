@@ -37,6 +37,9 @@
 - include: letsencrypt.yml
   when: use_letsencrypt
 
+- include: freeipa.yml
+  when: use_freeipa
+
 - include: redirect_to_https.yml
   when: ssl_redirect
 

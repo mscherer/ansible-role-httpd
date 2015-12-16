@@ -2,3 +2,4 @@
 log_retention_week: 8
 use_letsencrypt: False
 ssl_redirect: False
+use_freeipa: False
