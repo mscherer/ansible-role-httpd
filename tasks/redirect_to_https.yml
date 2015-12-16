@@ -1,0 +1,2 @@
+- template: src=redirect_to_https.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/redirect_to_https.conf
+  notify: verify config and restart httpd

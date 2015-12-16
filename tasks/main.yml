@@ -32,3 +32,6 @@
 
 - include: letsencrypt.yml
   when: use_letsencrypt
+
+- include: redirect_to_https.yml
+  when: ssl_redirect
