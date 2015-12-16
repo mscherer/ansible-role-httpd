@@ -1,7 +1,6 @@
 ---
 - yum: name={{ item }} state=installed
   with_items:
-  - python-passlib
   - httpd
   - mod_ssl
   - logrotate

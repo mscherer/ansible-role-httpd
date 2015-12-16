@@ -18,8 +18,9 @@
 - copy: dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content="# Placeholder"
   when: website_url is defined
 
-- htpasswd: path=/etc/httpd/{{ website_url }}.htpasswd name={{ website_user }} password={{ website_password }} owner=root group=apache mode=0640
+- include: password.yml
   when: website_user is defined
+
 
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
