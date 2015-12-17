@@ -3,6 +3,9 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
+- set_fact: website_url={{ ansible_fqdn }}
+  when: website_url is not defined
+
 - include: common.yml
   when: httpd_common is not defined
 
@@ -15,11 +18,9 @@
   when: document_root is defined
 
 - file:  path=/etc/httpd/conf.d/{{ website_url }}.conf.d/ state=directory
-  when: website_url is defined
 
 # needed for newer apache, who requires at least 1 file for include
 - copy: dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content="# Placeholder"
-  when: website_url is defined
 
 - include: password.yml
   when: website_user is defined
