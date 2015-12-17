@@ -1,2 +1,2 @@
-- template: src=document_root.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/document_root.conf
+- template: src=document_root.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/document_root.conf
   notify: verify config and restart httpd

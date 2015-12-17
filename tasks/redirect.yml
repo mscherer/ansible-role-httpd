@@ -1,2 +1,2 @@
-- template: src=redirect.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/redirect.conf
+- template: src=redirect.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/redirect.conf
   notify: verify config and restart httpd

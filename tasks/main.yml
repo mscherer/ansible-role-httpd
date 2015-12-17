@@ -3,8 +3,12 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
-- set_fact: website_url={{ ansible_fqdn }}
-  when: website_url is not defined
+- set_fact: website_domain={{ ansible_fqdn }}
+  when: website_domain is not defined
+
+# Just for compat, until I migrate to the new naming
+- set_fact: website_domain=website_url
+  when: website_url is defined
 
 - include: common.yml
   when: httpd_common is not defined
@@ -17,10 +21,10 @@
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
 
-- file:  path=/etc/httpd/conf.d/{{ website_url }}.conf.d/ state=directory
+- file:  path=/etc/httpd/conf.d/{{ website_domain }}.conf.d/ state=directory
 
 # needed for newer apache, who requires at least 1 file for include
-- copy: dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/placeholder.conf content="# Placeholder"
+- copy: dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/placeholder.conf content="# Placeholder"
 
 - include: password.yml
   when: website_user is defined
@@ -29,7 +33,7 @@
   when: document_root is defined
 
 - set_fact: port=80
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf owner=root group=apache mode=0644
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
 
 - include: redirect.yml
@@ -45,7 +49,7 @@
   when: ssl_redirect
 
 - set_fact: port=443
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_url }}_ssl.conf owner=root group=apache mode=0644
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
   when: use_ssl
 

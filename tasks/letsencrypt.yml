@@ -2,7 +2,7 @@
   with_items:
   - letsencrypt
 
-- set_fact: letsencrypt_root=/var/www/letsencrypt/{{ website_url}}
+- set_fact: letsencrypt_root=/var/www/letsencrypt/{{ website_domain }}
 
 - user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
 
@@ -10,16 +10,16 @@
 
 - file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=_letsencrypt mode=750 group=apache
 
-- template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ website_url }}.conf.d/letsencrypt.conf
-  when: website_url is defined
+- template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/letsencrypt.conf
+  when: website_domain is defined
   notify: verify config and restart httpd
 
 - meta: flush_handlers
 
 #TODO run the code as a untrusted user
-- command: letsencrypt --text --renew-by-default --email root+lets-{{ website_url }}@{{ ansible_domain }} --domains {{ website_url }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
+- command: letsencrypt --text --renew-by-default --email root+lets-{{ website_domain }}@{{ ansible_domain }} --domains {{ website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
-- file: state=link src=/etc/letsencrypt/live/{{ website_url }}/privkey.pem  dest=/etc/pki/tls/private/{{ website_url }}.key
-- file: state=link src=/etc/letsencrypt/live/{{ website_url }}/cert.pem     dest=/etc/pki/tls/certs/{{ website_url }}.crt
+- file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ website_domain }}.key
+- file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ website_domain }}.crt
 
 - include: common_ssl.yml
