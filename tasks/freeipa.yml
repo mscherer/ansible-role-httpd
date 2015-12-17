@@ -1,4 +1,4 @@
-- set_fact: keyfile=/etc/pki/tls/private/{{ website_domain }}.key cert_file=/etc/pki/tls/certs/{{ website_domain }}.crt
+- set_fact: key_file=/etc/pki/tls/private/{{ website_domain }}.key cert_file=/etc/pki/tls/certs/{{ website_domain }}.crt
 
 - fail: "A certificate can only be requested for the current server with the freeipa method"
   when: website_domain != ansible_fqdn
