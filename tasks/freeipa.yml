@@ -5,3 +5,4 @@
 
 - command: creates={{ key_file }} ipa-getcert request -f {{ cert_file }} -k {{ key_file }} -D {{ ansible_fqdn }} -K host/{{ ansible_fqdn }}
 
+- include: common_ssl.yml

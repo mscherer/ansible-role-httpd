@@ -2,7 +2,6 @@
 - yum: name={{ item }} state=installed
   with_items:
   - httpd
-  - mod_ssl
   - logrotate
 
 - service: name=httpd state=started enabled=yes

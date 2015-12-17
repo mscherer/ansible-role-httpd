@@ -1,0 +1,11 @@
+---
+- yum: name={{ item }} state=installed
+  with_items:
+  - mod_ssl
+
+- copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=apache mode=0644
+  with_items:
+  - remove_sslv3.conf
+  notify: verify config and restart httpd
+
+
