@@ -54,5 +54,5 @@
 - set_fact: port=443
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
-  when: use_ssl
+  when: use_ssl is defined and use_ssl
 
