@@ -48,6 +48,9 @@
 - include: freeipa.yml
   when: use_freeipa
 
+- include: mod_security.yml
+  when: use_mod_sec
+
 - include: redirect_to_https.yml
   when: force_ssl
 
@@ -55,4 +58,5 @@
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
   when: use_ssl is defined and use_ssl
+
 

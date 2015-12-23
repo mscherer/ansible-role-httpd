@@ -1,0 +1,10 @@
+---
+- yum: name={{ item }} state=installed
+  with_items:
+  - mod_security
+  - mod_security_crs
+  notify: verify config and restart httpd
+
+- lineinfile: dest=/etc/httpd/conf.d/mod_security.conf regexp='^(\s*)SecRuleEngine ' line='\1SecRuleEngine DetectionOnly'
+  notify: verify config and restart httpd
+  when: mod_sec_detection_only is True
