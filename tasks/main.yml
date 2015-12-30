@@ -54,6 +54,9 @@
 - include: redirect_to_https.yml
   when: force_ssl
 
+- include: hidden_service.yml
+  when: use_hidden_service
+
 - set_fact: port=443
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
