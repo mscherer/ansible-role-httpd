@@ -2,6 +2,8 @@
   with_items:
   - letsencrypt
 
+- include: common_ssl.yml
+
 - set_fact: letsencrypt_root=/var/www/letsencrypt/{{ website_domain }}
 
 - user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
@@ -22,4 +24,3 @@
 - file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ website_domain }}.key
 - file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ website_domain }}.crt
 
-- include: common_ssl.yml
