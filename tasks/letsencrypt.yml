@@ -6,7 +6,7 @@
 
 - set_fact: letsencrypt_root=/var/www/letsencrypt/{{ website_domain }}
 
-- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
+#- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
 
 - file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
 
