@@ -19,7 +19,7 @@
 - meta: flush_handlers
 
 #TODO run the code as a untrusted user
-- command: letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ website_domain }}@{{ ansible_domain }} --domains {{ website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
+- command: creates==/etc/letsencrypt/live/{{ website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ website_domain }}@{{ ansible_domain }} --domains {{ website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
 - file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ website_domain }}.key
 - file: state=link src=/etc/letsencrypt/live/{{ website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ website_domain }}.crt
