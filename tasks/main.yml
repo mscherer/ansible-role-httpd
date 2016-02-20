@@ -7,7 +7,7 @@
   when: website_domain is not defined
 
 # Just for compat, until I migrate to the new naming
-- set_fact: website_domain=website_url
+- set_fact: website_domain={{ website_url }}
   when: website_url is defined
 
 - set_fact: force_ssl=True
