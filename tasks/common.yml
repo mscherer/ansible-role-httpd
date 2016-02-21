@@ -1,12 +1,15 @@
 ---
-- yum: name={{ item }} state=installed
+- name: Install httpd and related packages
+  yum: name={{ item }} state=installed
   with_items:
   - httpd
   - logrotate
 
-- service: name=httpd state=started enabled=yes
+- name: Make sure httpd is running
+  service: name=httpd state=started enabled=yes
 
-- copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=apache mode=0644
+- name: Install httpd configuration
+  copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=apache mode=0644
   with_items:
   - name_vhost.conf
   - mod_filter.conf
@@ -15,17 +18,20 @@
   - various.conf
   notify: restart httpd
 
-- shell: lokkit -s {{ item }}
+- name: Open firewall (EL6)
+  shell: lokkit -s {{ item }}
   with_items:
   - http
   - https
   when: ansible_distribution_major_version == '6' and (ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat')
 
-- firewalld: service={{ item }} permanent=true state=enabled immediate=yes
+- name: Open firewall (firewalld)
+  firewalld: service={{ item }} permanent=true state=enabled immediate=yes
   with_items:
   - http
   - https
   when: ansible_distribution == 'Fedora' or ansible_distribution_major_version == '7'
 
-- lineinfile: dest=/etc/logrotate.conf regexp="^rotate" line="rotate {{ log_retention_week }}" state=present
+- name: Set log retention configuration
+  lineinfile: dest=/etc/logrotate.conf regexp="^rotate" line="rotate {{ log_retention_week }}" state=present
   when: log_retention_week is defined
