@@ -4,7 +4,7 @@
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
 - set_fact: website_domain={{ ansible_fqdn }}
-  when: website_domain is not defined
+  when: website_domain is not defined or not website_domain
 
 # Just for compat, until I migrate to the new naming
 - set_fact: website_domain={{ website_url }}
@@ -65,4 +65,7 @@
   notify: verify config and restart httpd
   when: use_ssl is defined and use_ssl
 
-
+# cleanup of variable
+- set_fact: force_ssl=False
+- set_fact: use_ssl=False
+- set_fact: website_domain=False
