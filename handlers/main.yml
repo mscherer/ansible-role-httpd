@@ -1,6 +1,8 @@
 ---
 - name: verify config and restart httpd
-  shell: service httpd configtest
+  command: service httpd configtest
+  args:
+    warn: False
   notify: restart httpd
 
 - name: restart httpd
