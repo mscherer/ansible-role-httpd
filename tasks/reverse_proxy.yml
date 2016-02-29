@@ -1,2 +1,2 @@
-- template: src=reverse_proxy.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/reverse_proxy.conf
+- template: src=reverse_proxy.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/reverse_proxy.conf
   notify: verify config and restart httpd

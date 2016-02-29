@@ -1,3 +1,3 @@
 - name: Install document root configuration
-  template: src=document_root.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/document_root.conf
+  template: src=document_root.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/document_root.conf
   notify: verify config and restart httpd

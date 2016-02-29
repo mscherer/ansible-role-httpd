@@ -1,4 +1,4 @@
-- set_fact: hs_dir=/var/lib//tor/hidden_service_www_{{ website_domain }}
+- set_fact: hs_dir=/var/lib//tor/hidden_service_www_{{ _website_domain }}
 
 - blockinfile:
     dest: /etc/tor/torrc
@@ -14,6 +14,6 @@
   register: onion_hostname
   changed_when: False
 
-- copy: dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/hidden_service.conf content="ServerAlias {{ onion_hostname }}"
+- copy: dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/hidden_service.conf content="ServerAlias {{ onion_hostname }}"
   notify: verify config and restart httpd
 

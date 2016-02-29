@@ -1,7 +1,7 @@
-- set_fact: key_file=/etc/pki/tls/private/{{ website_domain }}.key cert_file=/etc/pki/tls/certs/{{ website_domain }}.crt
+- set_fact: key_file=/etc/pki/tls/private/{{ _website_domain }}.key cert_file=/etc/pki/tls/certs/{{ _website_domain }}.crt
 
-- fail: msg="Requesting cert for {{ website_domain }}, a certificate can only be requested for the current server ({{ ansible_fqdn }}) with the freeipa method"
-  when: website_domain != ansible_fqdn
+- fail: msg="Requesting cert for {{ _website_domain }}, a certificate can only be requested for the current server ({{ ansible_fqdn }}) with the freeipa method"
+  when: _website_domain != ansible_fqdn
 
 - command: creates={{ key_file }} ipa-getcert request -f {{ cert_file }} -k {{ key_file }} -D {{ ansible_fqdn }} -K host/{{ ansible_fqdn }}
 

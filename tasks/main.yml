@@ -3,31 +3,46 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
-- set_fact: website_domain={{ ansible_fqdn }}
-  when: website_domain is not defined or not website_domain
+- set_fact: _website_domain={{ website_domain }}
+  when: website_domain is defined
+
+- set_fact: _website_domain={{ ansible_fqdn }}
+  when: website_domain is not defined
 
 # Just for compat, until I migrate to the new naming
-- set_fact: website_domain={{ website_url }}
+- set_fact: _website_domain={{ website_url }}
   when: website_url is defined
+  name: Set website_domain if website_url is defined
 
-- set_fact: force_ssl=True
+- set_fact: _force_ssl={{ force_ssl }}
+  when: force_ssl is defined
+  name: Set force_ssl if ssl_redirect is defined
+
+- set_fact: _force_ssl={{ ssl_redirect }}
   when: ssl_redirect is defined
+  name: Set force_ssl if ssl_redirect is defined
 
 - include: common.yml
   when: httpd_common is not defined
+  name: Include common setup of httpd
 
 - set_fact: httpd_common=True
+  name: Set http_common
 
-- set_fact: use_ssl=True
-  when: use_letsencrypt or use_freeipa
+- set_fact: _use_ssl=True
+  when: use_letsencrypt or use_freeipa or use_ssl
+  name: Set use_ssl
 
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
+  name: Set document root configuration
 
-- file:  path=/etc/httpd/conf.d/{{ website_domain }}.conf.d/ state=directory
+- file:  path=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/ state=directory
+  name: Create configuration directory for {{ _website_domain }}
 
 # needed for newer apache, who requires at least 1 file for include
-- copy: dest=/etc/httpd/conf.d/{{ website_domain }}.conf.d/placeholder.conf content="# Placeholder"
+- copy: dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/placeholder.conf content="# Placeholder"
+  name: Create placeholder configuration for {{ _website_domain }}
 
 - include: password.yml
   when: website_user is defined
@@ -36,7 +51,7 @@
   when: document_root is defined
 
 - set_fact: port=80
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}.conf owner=root group=apache mode=0644
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
 
 - include: redirect.yml
@@ -55,17 +70,21 @@
   when: use_mod_sec
 
 - include: redirect_to_https.yml
-  when: force_ssl
+  when: _force_ssl
 
 - include: hidden_service.yml
   when: use_hidden_service
 
 - set_fact: port=443
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ website_domain }}_ssl.conf owner=root group=apache mode=0644
+- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
   when: use_ssl is defined and use_ssl
 
-# cleanup of variable
-- set_fact: force_ssl=False
-- set_fact: use_ssl=False
-- set_fact: website_domain=False
+# cleanup of variables, since they leak to subsequent role run
+#
+# due to https://github.com/ansible/ansible/issues/14472
+- set_fact: _force_ssl=False
+  name: Clean force_ssl
+
+- set_fact: _use_ssl=False
+  name: Clean use_ssl
