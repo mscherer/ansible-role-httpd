@@ -78,7 +78,7 @@
 - set_fact: port=443
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
-  when: use_ssl is defined and use_ssl
+  when: _use_ssl is defined and _use_ssl
 
 # cleanup of variables, since they leak to subsequent role run
 #
