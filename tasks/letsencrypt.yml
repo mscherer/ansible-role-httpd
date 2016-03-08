@@ -23,4 +23,4 @@
 
 - file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ _website_domain }}.key
 - file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ _website_domain }}.crt
-
+- file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/fullchain.pem    dest=/etc/pki/tls/certs/{{ _website_domain }}.ca.crt

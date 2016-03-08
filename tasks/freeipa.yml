@@ -5,4 +5,6 @@
 
 - command: creates={{ key_file }} ipa-getcert request -f {{ cert_file }} -k {{ key_file }} -D {{ ansible_fqdn }} -K host/{{ ansible_fqdn }}
 
+- file: state=link src=/etc/ipa/ca.crt dest=/etc/pki/tls/certs/{{ _website_domain }}.ca.crt
+
 - include: common_ssl.yml
