@@ -33,6 +33,9 @@
   when: use_letsencrypt or use_freeipa or use_ssl
   name: Set use_ssl
 
+- include: common_ssl.yml
+  when: _use_ssl
+
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
   name: Set document root configuration

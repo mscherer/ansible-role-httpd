@@ -2,8 +2,6 @@
   with_items:
   - letsencrypt
 
-- include: common_ssl.yml
-
 - set_fact: letsencrypt_root=/var/www/letsencrypt/{{ _website_domain }}
 
 #- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
