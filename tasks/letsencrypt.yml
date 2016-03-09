@@ -8,7 +8,7 @@
 
 - file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
 
-- file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=_letsencrypt mode=750 group=apache
+- file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=root mode=750 group=apache
 
 - template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/letsencrypt.conf
   when: website_domain is defined
