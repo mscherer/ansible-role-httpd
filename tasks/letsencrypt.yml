@@ -19,6 +19,8 @@
 #TODO run the code as a untrusted user
 - command: creates=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ _website_domain }}@{{ ansible_domain }} --domains {{ _website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
+- copy: src=letsencrypt.renew.sh dest=/etc/cron.weekly/letsencrypt mode=750
+
 - file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ _website_domain }}.key
 - file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ _website_domain }}.crt
 - file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/fullchain.pem    dest=/etc/pki/tls/certs/{{ _website_domain }}.ca.crt
