@@ -1,0 +1,12 @@
+# Just for compat, until I migrate to the new naming
+- set_fact: _website_domain={{ website_url }}
+  when: website_url is defined
+  name: Set website_domain if website_url is defined
+
+- set_fact: _force_tls={{ force_ssl }}
+  when: force_ssl is defined
+  name: Set force_tls if force_ssl is defined
+
+- set_fact: _force_tls={{ ssl_redirect }}
+  when: ssl_redirect is defined
+  name: Set force_tls if ssl_redirect is defined

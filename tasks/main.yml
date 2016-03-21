@@ -9,18 +9,11 @@
 - set_fact: _website_domain={{ ansible_fqdn }}
   when: website_domain is not defined
 
-# Just for compat, until I migrate to the new naming
-- set_fact: _website_domain={{ website_url }}
-  when: website_url is defined
-  name: Set website_domain if website_url is defined
+- include: compat.yml
 
-- set_fact: _force_ssl={{ force_ssl }}
-  when: force_ssl is defined
-  name: Set force_ssl if ssl_redirect is defined
-
-- set_fact: _force_ssl={{ ssl_redirect }}
-  when: ssl_redirect is defined
-  name: Set force_ssl if ssl_redirect is defined
+- set_fact: _force_tls={{ force_tls }}
+  when: force_tls is defined
+  name: Set force_tls if force_tls is defined
 
 - include: common.yml
   when: httpd_common is not defined
@@ -29,12 +22,12 @@
 - set_fact: httpd_common=True
   name: Set http_common
 
-- set_fact: _use_ssl=True
-  when: use_letsencrypt or use_freeipa or use_ssl
-  name: Set use_ssl
+- set_fact: _use_tls=True
+  when: use_letsencrypt or use_freeipa or use_tls
+  name: Set use_tls
 
-- include: common_ssl.yml
-  when: _use_ssl
+- include: common_tls.yml
+  when: _use_tls
 
 - file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
   when: document_root is defined
@@ -73,7 +66,7 @@
   when: use_mod_sec
 
 - include: redirect_to_https.yml
-  when: _force_ssl
+  when: _force_tls
 
 - include: hidden_service.yml
   when: use_hidden_service
@@ -81,13 +74,13 @@
 - set_fact: port=443
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
-  when: _use_ssl is defined and _use_ssl
+  when: _use_tls is defined and _use_tls
 
 # cleanup of variables, since they leak to subsequent role run
 #
 # due to https://github.com/ansible/ansible/issues/14472
-- set_fact: _force_ssl=False
-  name: Clean force_ssl
+- set_fact: _force_tls=False
+  name: Clean force_tls
 
-- set_fact: _use_ssl=False
-  name: Clean use_ssl
+- set_fact: _use_tls=False
+  name: Clean use_tls

@@ -34,7 +34,7 @@ renewed automatically using the variable `use_freeipa`. This is mostly used for 
 
 ## Self managed certificates
 
-For people who prefer to use certificates signed manually by a CA, the option `use_ssl` permit to
+For people who prefer to use certificates signed manually by a CA, the option `use_tls` permit to
 enable SSL/TLS without managing the certificate. The key should be placed on /etc/pki/tls/private/$DOMAIN.key
 the certificate in /etc/pki/tls/certs/$DOMAIN.crt and the CA certificate in /etc/pki/tls/certs/$DOMAIN.ca.crt.
 
