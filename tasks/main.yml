@@ -12,7 +12,7 @@
 - include: compat.yml
 
 - set_fact: _force_tls={{ force_tls }}
-  when: force_tls is defined
+  when: force_tls
   name: Set force_tls if force_tls is defined
 
 - include: common.yml
@@ -74,7 +74,7 @@
 - set_fact: port=443
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd
-  when: _use_tls is defined and _use_tls
+  when: _use_tls
 
 # cleanup of variables, since they leak to subsequent role run
 #
