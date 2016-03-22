@@ -46,6 +46,9 @@
 - include: document_root.yml
   when: document_root is defined
 
+- include: server_aliases.yml
+  when: server_aliases is defined
+
 - set_fact: port=80
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf owner=root group=apache mode=0644
   notify: verify config and restart httpd

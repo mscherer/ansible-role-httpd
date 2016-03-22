@@ -1,0 +1,3 @@
+- name: Install server alias configuration
+  template: src=server_alias.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/server_alias.conf
+  notify: verify config and restart httpd

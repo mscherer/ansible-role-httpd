@@ -71,6 +71,24 @@ set the password protection.
 Removing the password protection requires to remove the 2 variables and remove the /etc/httpd/$DOMAIN.htpasswd
 file created.
 
+## Server aliases
+
+Some vhosts can correspond to multiple vhosts. While most of the time, this can be achieved with a proper redirect,
+a alias is sometime a prefered way to handle that. So one can use the `server_aliases` variable for that like this:
+
+```
+$ cat deploy_web.yml
+- hosts: web
+  roles:
+  - role: httpd
+    website_domain: foo.example.org
+    server_aliases:
+    - www.example.org
+    - web.example.org
+```
+
+But usually, for cleaner URL, a redirect is preferred.
+
 # Extend the role
 
 In order to compose more complex roles by combining (and using depends), the installed configuration also
