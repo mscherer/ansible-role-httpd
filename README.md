@@ -60,7 +60,26 @@ can be tweaked with the `log_retention_week` variable
 ## Redirection
 
 If the variable `redirect` is set, the vhost will redirect to the new domain name. This is mostly done for
-supporting compatibility domain after moving a project, or to support multiple domain name.
+supporting compatibility domain after moving a project, or to support multiple domain names. This argument
+is aimed for the simpler case, handling various things like letsencrypt automatically.
+
+One can also use the variable `redirects`, as a array of url and redirection. This is
+much more powerful, but requires to becareful as there is fewer verifications built-in.
+It can also use the Redirectmatch directive by using `match: True`.
+
+```
+$ cat deploy_web.yml
+- hosts: web
+  roles:
+  - role: httpd
+    website_domain: foo.example.org
+    redirect_matches:
+    - src: "/blog/about"
+      target: "/about"
+    - src: "^/feed/(.*)"
+      target: "http://blog.example.org/feed/$1"
+      match: True
+```
 
 ## Password protection
 

@@ -56,6 +56,9 @@
 - include: redirect.yml
   when: redirect is defined
 
+- include: redirects.yml
+  when: redirects is defined
+
 - include: letsencrypt.yml
   when: use_letsencrypt
 
