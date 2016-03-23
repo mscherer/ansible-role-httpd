@@ -81,6 +81,23 @@ $ cat deploy_web.yml
       match: True
 ```
 
+## Aliases
+
+The support of the Aliases directive is enabled with `aliases`, which is a list of url and path. The
+role take care of adding `Require all granted` for the path.
+
+```
+$ cat deploy_web.yml
+- hosts: web
+  roles:
+  - role: httpd
+    website_domain: alamut.example.org
+    aliases:
+    - url: "/blog/"
+      path: "/var/www/blog/"
+```
+
+
 ## Password protection
 
 In order to deploy website before launch, we traditionnaly protect them with a simple user/password

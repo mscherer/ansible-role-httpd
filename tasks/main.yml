@@ -59,6 +59,9 @@
 - include: redirects.yml
   when: redirects is defined
 
+- include: aliases.yml
+  when: aliases is defined
+
 - include: letsencrypt.yml
   when: use_letsencrypt
 
