@@ -1,6 +1,8 @@
 - set_fact: hs_dir=/var/lib//tor/hidden_service_www_{{ _website_domain }}
+  name: Set hs_dir
 
-- blockinfile:
+- name: Add the HiddenServiceDir config to torrc
+  blockinfile:
     dest: /etc/tor/torrc
     block: |
       HiddenServiceDir {{ hs_dir }}
@@ -8,12 +10,15 @@
       HiddenServicePort 80 127.0.0.1:80
     notify: restart tor
 
-- meta: flush_handlers
+- name: Flush handlers
+  meta: flush_handlers
 
-- shell: cat {{ hs_dir }}/hostname
+- name: Get the onion hostname
+  shell: cat {{ hs_dir }}/hostname
   register: onion_hostname
   changed_when: False
 
-- copy: dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/hidden_service.conf content="ServerAlias {{ onion_hostname }}"
+- name: Deploy the httpd config for onion
+  copy: dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/hidden_service.conf content="ServerAlias {{ onion_hostname }}"
   notify: verify config and restart httpd
 
