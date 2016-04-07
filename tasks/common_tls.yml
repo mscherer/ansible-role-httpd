@@ -1,6 +1,6 @@
 ---
 - name: Install mod_ssl
-  yum: name={{ item }} state=installed
+  package: name={{ item }} state=installed
   with_items:
   - mod_ssl
 

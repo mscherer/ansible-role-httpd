@@ -1,6 +1,6 @@
 ---
 - name: Install httpd and related packages
-  yum: name={{ item }} state=installed
+  package: name={{ item }} state=present
   with_items:
   - httpd
   - logrotate
