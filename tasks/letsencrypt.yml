@@ -11,7 +11,7 @@
 - name: Create letsencrypt directory
   file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
   with_items:
-  - {{ letsencrypt_root }}
+  - "{{ letsencrypt_root }}"
   - /var/www/letsencrypt/
 
 - name: Deploy letsencrypt.conf httpd config
