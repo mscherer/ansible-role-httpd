@@ -8,11 +8,11 @@
 
 #- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
 
-- name: Create /var/www/letsencrypt/
+- name: Create letsencrypt directory
   file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
-
-- name: Create {{ letsencrypt_root }}
-  file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=root mode=750 group=apache
+  with_items:
+  - {{ letsencrypt_root }}
+  - /var/www/letsencrypt/
 
 - name: Deploy letsencrypt.conf httpd config
   template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/letsencrypt.conf
