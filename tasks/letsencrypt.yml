@@ -1,26 +1,37 @@
-- yum: name={{ item }} state=installed
+- name: Install letsencrypt package
+  package: name={{ item }} state=installed
   with_items:
   - letsencrypt
 
-- set_fact: letsencrypt_root=/var/www/letsencrypt/{{ _website_domain }}
+- name: Set the variable for the root
+  set_fact: letsencrypt_root=/var/www/letsencrypt/{{ _website_domain }}
 
 #- user: system=yes name=_letsencrypt comment="Letsencrypt user, ansible created"
 
-- file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
+- name: Create /var/www/letsencrypt/
+  file: state=directory path=/var/www/letsencrypt/ setype=httpd_sys_content_t owner=root mode=750 group=apache
 
-- file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=root mode=750 group=apache
+- name: Create {{ letsencrypt_root }}
+  file: state=directory path={{ letsencrypt_root }} setype=httpd_sys_content_t owner=root mode=750 group=apache
 
-- template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/letsencrypt.conf
+- name: Deploy letsencrypt.conf httpd config
+  template: src=letsencrypt.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/letsencrypt.conf
   when: website_domain is defined
   notify: verify config and restart httpd
 
+# need to restart httpd now, since we need
 - meta: flush_handlers
 
 #TODO run the code as a untrusted user
-- command: creates=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ _website_domain }}@{{ ansible_domain }} --domains {{ _website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
+- name: Run the letsencrypt query
+  command: creates=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ _website_domain }}@{{ ansible_domain }} --domains {{ _website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
-- copy: src=letsencrypt.renew.sh dest=/etc/cron.weekly/letsencrypt mode=750
+- name: Deploy the cron to renew
+  copy: src=letsencrypt.renew.sh dest=/etc/cron.weekly/letsencrypt mode=750
 
-- file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem  dest=/etc/pki/tls/private/{{ _website_domain }}.key
-- file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/cert.pem     dest=/etc/pki/tls/certs/{{ _website_domain }}.crt
-- file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/fullchain.pem    dest=/etc/pki/tls/certs/{{ _website_domain }}.ca.crt
+- name: Link certificates and keys
+  file: state=link src=/etc/letsencrypt/live/{{ _website_domain }}/{{ item.src }} dest=/etc/pki/tls/{{ item.dst }}
+  with_items:
+  - { src: 'privkey.pem',   dst: 'private/{{ _website_domain }}.key' }
+  - { src: 'cert.pem',      dst: 'certs/{{ _website_domain }}.crt' }
+  - { src: 'fullchain.pem', dst: 'certs/{{ _website_domain }}.ca.crt' }
