@@ -9,3 +9,4 @@ use_hidden_service: False
 use_tls: False
 aliases: []
 server_aliases: []
+redirects: []
