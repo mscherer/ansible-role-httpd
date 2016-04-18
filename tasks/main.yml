@@ -55,7 +55,6 @@
   notify: verify config and restart httpd
 
 - include: redirect.yml
-  when: redirect is defined
 
 - include: redirects.yml
   when: redirects is defined
