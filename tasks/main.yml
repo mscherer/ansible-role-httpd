@@ -47,7 +47,6 @@
   when: website_user is defined
 
 - include: document_root.yml
-  when: document_root is defined
 
 - include: server_alias.yml
   when: server_aliases is defined
