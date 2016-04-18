@@ -49,7 +49,6 @@
 - include: document_root.yml
 
 - include: server_alias.yml
-  when: server_aliases is defined
 
 - set_fact: port=80
 - template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf owner=root group=apache mode=0644
