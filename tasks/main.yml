@@ -71,7 +71,6 @@
   when: use_freeipa
 
 - include: reverse_proxy.yml
-  when: reverse_proxy is defined
 
 - include: mod_security.yml
   when: use_mod_sec
