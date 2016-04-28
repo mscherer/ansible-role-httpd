@@ -72,7 +72,6 @@
   when: use_mod_sec
 
 - include: redirect_to_https.yml
-  when: _force_tls
 
 - include: hidden_service.yml
   when: use_hidden_service
