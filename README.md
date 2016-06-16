@@ -26,6 +26,9 @@ A option to force the TLS version of the website exist, just set `force_tls: Tru
 To enable the letsencypt support, just set `use_letsencrypt: True` with your role.
 It will take care of installing needed packages, and set the config for the HTTP challenge.
 
+It will use a automatically constructed email address based on domain name. If the server domain
+cannot receive email, please see the `mail_domain` variable to override it.
+
 ## FreeIPA / dogtag
 
 [FreeIPA](http://freeipa.org) come with [DogTag](http://pki.fedoraproject.org/wiki/PKI_Main_Page),

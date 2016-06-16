@@ -24,7 +24,7 @@
 
 #TODO run the code as a untrusted user
 - name: Run the letsencrypt query
-  command: creates=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ _website_domain }}@{{ ansible_domain }} --domains {{ _website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
+  command: creates=/etc/letsencrypt/live/{{ _website_domain }}/privkey.pem letsencrypt --text --renew-by-default --rsa-key-size 3072 --email root+lets-{{ _website_domain }}@{{ mail_domain | default(ansible_domain) }} --domains {{ _website_domain }} --agree-tos --webroot --webroot-path {{ letsencrypt_root }} certonly
 
 - name: Deploy the cron to renew
   copy: src=letsencrypt.renew.sh dest=/etc/cron.weekly/letsencrypt mode=750
