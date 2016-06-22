@@ -128,6 +128,11 @@ $ cat deploy_web.yml
 
 But usually, for cleaner URL, a redirect is preferred.
 
+## Enable mod_speling
+
+Administrators wishing to use mod_speling can juse use `use_mod_speling: True` in the definition
+of the vhost.
+
 # Extend the role
 
 In order to compose more complex roles by combining (and using depends), the installed configuration also
