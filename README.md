@@ -145,7 +145,7 @@ level. Thus, this permit to keep the same variable name, like this:
 $ cat roles/piwik/meta/main.yml
 ---
 dependencies:
-- { role: mysql }
+- { role: mariadb }
 - { role: httpd, document_root: /var/www/piwik/, use_freeipa: True }
 
 $ cat deploy_piwik.yml
