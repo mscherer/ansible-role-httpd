@@ -1,6 +1,8 @@
 ---
 - name: Install WSGI support
-  yum: name={{ item }} state=installed
+  package:
+    name: "{{ item }}"
+    state: present
   with_items:
   - mod_wsgi
 
@@ -9,4 +11,3 @@
     src: python_global.conf
     dest: /etc/httpd/conf.d/python_global.conf
   notify: verify config and restart httpd
-

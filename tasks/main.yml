@@ -3,18 +3,22 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
-- set_fact: _website_domain={{ website_domain }}
+- set_fact:
+    _website_domain: "{{ website_domain }}"
   when: website_domain is defined
 
-- set_fact: _website_domain={{ ansible_fqdn }}
+- set_fact:
+    _website_domain: "{{ ansible_fqdn }}"
   when: website_domain is not defined
 
 - include: compat.yml
 
-- set_fact: _force_tls=False
-- set_fact: _use_tls=False
+- set_fact:
+    _force_tls: False
+    _use_tls: False
 
-- set_fact: _force_tls={{ force_tls }}
+- set_fact:
+    _force_tls: "{{ force_tls }}"
   when: force_tls
   name: Set force_tls if force_tls is defined
 
@@ -22,10 +26,12 @@
   when: httpd_common is not defined
   name: Include common setup of httpd
 
-- set_fact: httpd_common=True
+- set_fact:
+    httpd_common: True
   name: Set http_common
 
-- set_fact: _use_tls=True
+- set_fact:
+    _use_tls: True
   when: use_letsencrypt or use_freeipa or use_tls
   name: Set use_tls
 
@@ -35,15 +41,25 @@
 - include: common_python.yml
   when: wsgi_script is defined and wsgi_script
 
-- file: state=directory path={{ document_root }} setype=httpd_sys_content_t owner=root mode=755 group=root
+- file:
+    state: directory
+    path: "{{ document_root }}"
+    setype: httpd_sys_content_t
+    owner: root
+    mode: 0755
+    group: root
   when: document_root is defined
   name: Set document root configuration
 
-- file:  path=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/ state=directory
+- file:
+    path: "/etc/httpd/conf.d/{{ _website_domain }}.conf.d/"
+    state: directory
   name: Create configuration directory for {{ _website_domain }}
 
 # needed for newer apache, who requires at least 1 file for include
-- copy: dest=/etc/httpd/conf.d/{{ _website_domain }}.conf.d/placeholder.conf content="# Placeholder"
+- copy:
+    dest: "/etc/httpd/conf.d/{{ _website_domain }}.conf.d/placeholder.conf"
+    content: "# Placeholder"
   name: Create placeholder configuration for {{ _website_domain }}
 
 - include: password.yml
@@ -55,8 +71,15 @@
 
 - include: mod_speling.yml
 
-- set_fact: port=80
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}.conf owner=root group=apache mode=0644
+- set_fact:
+    port: 80
+
+- template:
+    src: vhost.conf
+    dest: "/etc/httpd/conf.d/{{ _website_domain }}.conf"
+    owner: root
+    group: apache
+    mode: 0644
   notify: verify config and restart httpd
 
 - include: redirect.yml
@@ -84,16 +107,22 @@
 - include: hidden_service.yml
   when: use_hidden_service
 
-- set_fact: port=443
-- template: src=vhost.conf dest=/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf owner=root group=apache mode=0644
+- set_fact:
+    port: 443
+
+- template:
+    src: vhost.conf
+    dest: "/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf"
+    owner: root
+    group: apache
+    mode: 0644
   notify: verify config and restart httpd
   when: _use_tls
 
 # cleanup of variables, since they leak to subsequent role run
 #
 # due to https://github.com/ansible/ansible/issues/14472
-- set_fact: _force_tls=False
-  name: Clean force_tls
-
-- set_fact: _use_tls=False
-  name: Clean use_tls
+- set_fact:
+    _force_tls: False
+    _use_tls: False
+  name: Clean force_tls and use_tls
