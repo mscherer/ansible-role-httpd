@@ -1,15 +1,25 @@
 ---
 - name: Install httpd and related packages
-  package: name={{ item }} state=present
+  package:
+    name: "{{ item }}"
+    state: present
   with_items:
   - httpd
   - logrotate
 
 - name: Make sure httpd is running
-  service: name=httpd state=started enabled=yes
+  service:
+    name: httpd
+    state: started
+    enabled: yes
 
 - name: Install httpd configuration
-  copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=apache mode=0644
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/httpd/conf.d/{{ item }}"
+    owner: root
+    group: apache
+    mode: 0644
   with_items:
   - name_vhost.conf
   - mod_filter.conf
@@ -25,12 +35,20 @@
   when: ansible_distribution_major_version == '6' and (ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat')
 
 - name: Open firewall (firewalld)
-  firewalld: service={{ item }} permanent=true state=enabled immediate=yes
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
   with_items:
   - http
   - https
   when: ansible_distribution == 'Fedora' or ansible_distribution_major_version == '7'
 
 - name: Set log retention configuration
-  lineinfile: dest=/etc/logrotate.conf regexp="^rotate" line="rotate {{ log_retention_week }}" state=present
+  lineinfile:
+    dest: /etc/logrotate.conf
+    regexp: "^rotate"
+    line: "rotate {{ log_retention_week }}"
+    state: present
   when: log_retention_week is defined
