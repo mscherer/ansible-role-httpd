@@ -1,0 +1,1 @@
+letsencrypt_root: "/var/www/letsencrypt/{{ _website_domain }}/"
