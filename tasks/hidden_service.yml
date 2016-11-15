@@ -4,7 +4,7 @@
 
 - name: Add the HiddenServiceDir config to torrc
   blockinfile:
-    dest: /etc/tor/torrc
+    dest: "{{ torrc }}"
     block: |
       HiddenServiceDir {{ hs_dir }}
       HiddenServicePort 443 127.0.0.1:443
