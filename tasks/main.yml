@@ -3,14 +3,6 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
-- set_fact:
-    _website_domain: "{{ website_domain }}"
-  when: website_domain is defined
-
-- set_fact:
-    _website_domain: "{{ ansible_fqdn }}"
-  when: website_domain is not defined
-
 - include: compat.yml
 
 - set_fact:

@@ -1,1 +1,2 @@
 letsencrypt_root: "/var/www/letsencrypt/{{ _website_domain }}/"
+_website_domain: "{{ website_domain | default(ansible_fqdn) }}"
