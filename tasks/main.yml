@@ -3,19 +3,13 @@
   fail: msg="Redirect should be a complete URL, not {{ redirect }}"
   when: "redirect is defined and not redirect | match('^https?://.*/')"
 
-- set_fact:
-    _website_domain: "{{ website_domain }}"
-  when: website_domain is defined
-
-- set_fact:
-    _website_domain: "{{ ansible_fqdn }}"
-  when: website_domain is not defined
-
 - include: compat.yml
 
 - set_fact:
     _force_tls: False
     _use_tls: False
+    _vhost_conffile_prefix: "/etc/httpd/conf.d/{{ _website_domain }}"
+    _vhost_confdir: "/etc/httpd/conf.d/{{ _website_domain }}.conf.d"
 
 - set_fact:
     _force_tls: "{{ force_tls }}"
@@ -52,13 +46,13 @@
   name: Set document root configuration
 
 - file:
-    path: "/etc/httpd/conf.d/{{ _website_domain }}.conf.d/"
+    path: "{{ _vhost_confdir }}"
     state: directory
   name: Create configuration directory for {{ _website_domain }}
 
 # needed for newer apache, who requires at least 1 file for include
 - copy:
-    dest: "/etc/httpd/conf.d/{{ _website_domain }}.conf.d/placeholder.conf"
+    dest: "{{ _vhost_confdir }}/placeholder.conf"
     content: "# Placeholder"
   name: Create placeholder configuration for {{ _website_domain }}
 
@@ -76,7 +70,7 @@
 
 - template:
     src: vhost.conf
-    dest: "/etc/httpd/conf.d/{{ _website_domain }}.conf"
+    dest: "{{ _vhost_conffile_prefix }}.conf"
     owner: root
     group: apache
     mode: 0644
@@ -112,7 +106,7 @@
 
 - template:
     src: vhost.conf
-    dest: "/etc/httpd/conf.d/{{ _website_domain }}_ssl.conf"
+    dest: "{{ _vhost_conffile_prefix }}_ssl.conf"
     owner: root
     group: apache
     mode: 0644

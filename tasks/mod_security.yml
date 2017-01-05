@@ -10,7 +10,8 @@
 
 - lineinfile:
     dest: /etc/httpd/conf.d/mod_security.conf
-    regexp: "^(\\s*)SecRuleEngine "
+    regexp: '^(\s*)SecRuleEngine '
     line: "\\1SecRuleEngine {{ 'DetectionOnly' if mod_sec_detection_only else 'On' }}"
+    backrefs: yes
   notify: verify config and restart httpd
   name: Deploy modsecurity in apache
