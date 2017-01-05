@@ -8,10 +8,16 @@
   notify: verify config and restart httpd
   name: Install mod_security packages
 
-- lineinfile:
+- name: Disable mod_security for all vhost
+  lineinfile:
     dest: /etc/httpd/conf.d/mod_security.conf
     regexp: '^(\s*)SecRuleEngine '
-    line: "\\1SecRuleEngine {{ 'DetectionOnly' if mod_sec_detection_only else 'On' }}"
+    line: "\\1SecRuleEngine Off"
     backrefs: yes
   notify: verify config and restart httpd
-  name: Deploy modsecurity in apache
+
+- name: Enable mod_security on a vhost
+  template:
+    src: mod_security.conf
+    dest: "{{ _vhost_confdir }}/mod_security.conf"
+  notify: verify config and restart httpd
