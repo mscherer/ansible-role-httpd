@@ -29,6 +29,10 @@
   when: use_letsencrypt or use_freeipa or use_tls
   name: Set use_tls
 
+- fail:
+    msg: "Cannot set force_tls without any TLS method"
+  when: _force_tls and not _use_tls
+
 - include: common_tls.yml
   when: _use_tls
 
