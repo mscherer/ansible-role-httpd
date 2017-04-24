@@ -11,5 +11,5 @@ use_mod_speling: False
 aliases: []
 server_aliases: []
 redirects: []
-allow_app_signals: False
+wsgi_allow_app_signals: False
 wsgi_threads: 5
