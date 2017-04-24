@@ -52,3 +52,8 @@
     line: "rotate {{ log_retention_week }}"
     state: present
   when: log_retention_week is defined
+
+- name: Set _http_common
+  set_fact:
+    _httpd_common: True
+

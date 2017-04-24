@@ -17,12 +17,8 @@
   name: Set force_tls if force_tls is defined
 
 - include: common.yml
-  when: httpd_common is not defined
+  when: _httpd_common is not defined
   name: Include common setup of httpd
-
-- set_fact:
-    httpd_common: True
-  name: Set http_common
 
 - set_fact:
     _use_tls: True
@@ -34,10 +30,10 @@
   when: _force_tls and not _use_tls
 
 - include: common_tls.yml
-  when: _use_tls
+  when: _use_tls and _httpd_common_tls is not defined
 
 - include: common_python.yml
-  when: wsgi_script is defined and wsgi_script
+  when: wsgi_script is defined and wsgi_script and _httpd_common_wsgi is not defined
 
 - file:
     state: directory
