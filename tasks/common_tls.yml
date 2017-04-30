@@ -16,3 +16,8 @@
   with_items:
   - remove_sslv3.conf
   notify: verify config and restart httpd
+
+- name: Set _http_common_tls
+  set_fact:
+    _httpd_common_tls: True
+
