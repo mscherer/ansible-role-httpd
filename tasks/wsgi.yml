@@ -1,0 +1,13 @@
+---
+- name: Set wsgi.conf template for {{ _website_domain }}
+  template:
+    src: wsgi.conf
+    dest: "{{ _vhost_confdir }}/wsgi.conf"
+  notify: verify config and restart httpd
+
+# TODO remove after May 2018
+- file:
+    name: "{{ _vhost_confdir }}/python.conf"
+    state: absent
+  notify: verify config and restart httpd
+
